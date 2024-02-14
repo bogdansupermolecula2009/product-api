@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  db-wallet-service:
+    image: postgres:14
+    restart: always
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_DB: product-api
+      POSTGRES_USER: supermolecula
+      POSTGRES_PASSWORD: qwerty1
