@@ -15,6 +15,7 @@ public class ProductDtoFactory {
         dto.setDescription(product.getDescription());
         dto.setPrice(product.getPrice());
         dto.setCreatedAt(product.getCreatedAt());
+        dto.setThumbnail(product.getThumbnail());
         return dto;
     }
 }

@@ -7,11 +7,15 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.andrianov.productapi.exception.ProductNotFoundException;
 import ru.andrianov.productapi.factory.ProductDtoFactory;
 import ru.andrianov.productapi.model.ProductEntity;
+import ru.andrianov.productapi.model.ProductImageEntity;
 import ru.andrianov.productapi.model.dto.CreatedProductDto;
 import ru.andrianov.productapi.model.dto.ProductDto;
+import ru.andrianov.productapi.model.dto.ProductImageDto;
 import ru.andrianov.productapi.model.dto.UpdatedProductDto;
+import ru.andrianov.productapi.repository.ProductImageRepo;
 import ru.andrianov.productapi.repository.ProductRepo;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +25,8 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepo productRepo;
+
+    private final ProductImageRepo productImageRepo;
 
     public List<ProductDto> getProducts() {
         return productRepo.findAllByOrderByCreatedAtAsc().stream()
@@ -59,5 +65,20 @@ public class ProductService {
         ProductEntity productEntity = productRepo
                 .findByProductId(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
         return productRepo.deleteByProductId(productEntity.getProductId());
+    }
+
+    public ProductImageEntity uploadImage(ProductImageDto productImageDto){
+        ProductImageEntity productImage = new ProductImageEntity();
+        ProductEntity product = productRepo.findByProductId(productImageDto.getProductId()).get();
+
+        productImage.setProduct(product);
+        productImage.setData(productImageDto.getData());
+        productImage.setContentType(productImageDto.getContentType());
+        productImageRepo.save(productImage);
+
+        product.setThumbnail(productImageDto.getData());
+        productRepo.save(product);
+
+        return productImage;
     }
 }
