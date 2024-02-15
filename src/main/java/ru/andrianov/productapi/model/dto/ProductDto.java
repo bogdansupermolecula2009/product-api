@@ -2,6 +2,7 @@ package ru.andrianov.productapi.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import ru.andrianov.productapi.model.ProductImageEntity;
 
 import java.time.LocalDateTime;
 
@@ -20,4 +21,6 @@ public class ProductDto {
     private Double price;
 
     private LocalDateTime createdAt;
+
+    private String thumbnail;
 }

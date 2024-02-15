@@ -1,5 +1,6 @@
 package ru.andrianov.productapi.model.dto;
 
+import jakarta.persistence.Lob;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -29,5 +30,6 @@ public class CreatedProductDto {
     @NotNull
     @Min(value = 0, message = "price must be greater than 0")
     private Double price;
+
 
 }
