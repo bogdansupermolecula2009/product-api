@@ -1,6 +1,5 @@
 package ru.andrianov.productapi.model.dto;
 
-import jakarta.persistence.Lob;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

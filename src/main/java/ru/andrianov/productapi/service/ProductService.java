@@ -3,19 +3,15 @@ package ru.andrianov.productapi.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.andrianov.productapi.exception.ProductNotFoundException;
 import ru.andrianov.productapi.factory.ProductDtoFactory;
 import ru.andrianov.productapi.model.ProductEntity;
-import ru.andrianov.productapi.model.ProductImageEntity;
 import ru.andrianov.productapi.model.dto.CreatedProductDto;
 import ru.andrianov.productapi.model.dto.ProductDto;
-import ru.andrianov.productapi.model.dto.ProductImageDto;
 import ru.andrianov.productapi.model.dto.UpdatedProductDto;
-import ru.andrianov.productapi.repository.ProductImageRepo;
+import ru.andrianov.productapi.repository.ImageRepo;
 import ru.andrianov.productapi.repository.ProductRepo;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,18 +20,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final ProductRepo productRepo;
-
-    private final ProductImageRepo productImageRepo;
+    private final ProductRepo productRepository;
+    private final ImageRepo imageRepository;
 
     public List<ProductDto> getProducts() {
-        return productRepo.findAllByOrderByCreatedAtAsc().stream()
+        return productRepository.findAllByOrderByCreatedAtAsc().stream()
                 .map(ProductDtoFactory::transformProductEntityToDto)
                 .collect(Collectors.toList());
     }
 
     public ProductDto getProduct(Long id) {
-        return ProductDtoFactory.transformProductEntityToDto(productRepo
+        return ProductDtoFactory.transformProductEntityToDto(productRepository
                 .findByProductId(id).orElseThrow(() -> new ProductNotFoundException("Product not found")));
     }
 
@@ -46,39 +41,26 @@ public class ProductService {
         productEntity.setCategory(createdProductDto.getCategory());
         productEntity.setDescription(createdProductDto.getDescription());
         productEntity.setPrice(createdProductDto.getPrice());
-        productRepo.save(productEntity);
+        productRepository.save(productEntity);
         return ProductDtoFactory.transformProductEntityToDto(productEntity);
     }
 
     public ProductDto updateProduct(UpdatedProductDto updatedProductDto, Long id) {
-        ProductEntity productEntity = productRepo
+        ProductEntity productEntity = productRepository
                 .findByProductId(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
         productEntity.setTitle(updatedProductDto.getTitle());
         productEntity.setCategory(updatedProductDto.getCategory());
         productEntity.setDescription(updatedProductDto.getDescription());
         productEntity.setPrice(updatedProductDto.getPrice());
-        productRepo.save(productEntity);
+        productEntity.setThumbnail(imageRepository.findByImageId(updatedProductDto.getThumbnailId()));
+        productRepository.save(productEntity);
         return ProductDtoFactory.transformProductEntityToDto(productEntity);
     }
 
     public Long deleteProduct(Long id) {
-        ProductEntity productEntity = productRepo
+        ProductEntity productEntity = productRepository
                 .findByProductId(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
-        return productRepo.deleteByProductId(productEntity.getProductId());
+        return productRepository.deleteByProductId(productEntity.getProductId());
     }
 
-    public ProductImageEntity uploadImage(ProductImageDto productImageDto){
-        ProductImageEntity productImage = new ProductImageEntity();
-        ProductEntity product = productRepo.findByProductId(productImageDto.getProductId()).get();
-
-        productImage.setProduct(product);
-        productImage.setData(productImageDto.getData());
-        productImage.setContentType(productImageDto.getContentType());
-        productImageRepo.save(productImage);
-
-        product.setThumbnail(productImageDto.getData());
-        productRepo.save(product);
-
-        return productImage;
-    }
 }

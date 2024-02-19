@@ -1,16 +1,19 @@
 package ru.andrianov.productapi.model.dto;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Getter
 @Setter
-public class ProductImageDto {
+public class ImageDto {
 
     private Long productId;
 
-    private String data;
+    private String name;
 
     private String contentType;
+
+    private String url;
+
 }

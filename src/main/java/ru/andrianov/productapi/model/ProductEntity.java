@@ -37,6 +37,7 @@ public class ProductEntity {
     @NotNull
     private LocalDateTime createdAt;
 
-    @Lob
-    private String thumbnail;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = false)
+    @JoinColumn(name = "image_id")
+    private ImageEntity thumbnail;
 }

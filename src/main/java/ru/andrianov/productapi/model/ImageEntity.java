@@ -3,24 +3,29 @@ package ru.andrianov.productapi.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.hibernate.annotations.JdbcTypeCode;
+
+import java.sql.Types;
 
 @Entity
 @Table(name = "image")
 @Data
-public class ProductImageEntity {
+public class ImageEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long imageId;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @MapsId
-    private ProductEntity product;
-
-    @Lob
     @NotBlank
-    private String data;
+    private String name;
 
     @NotBlank
     private String contentType;
+
+    @Lob
+    @JdbcTypeCode(Types.BINARY)
+    private byte[] data;
+
+    @OneToOne(mappedBy = "thumbnail",cascade = CascadeType.PERSIST)
+    private ProductEntity product;
 }
