@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.springframework.util.StreamUtils;
 
 import java.time.LocalDateTime;
 
@@ -38,5 +37,7 @@ public class ProductEntity {
     @NotNull
     private LocalDateTime createdAt;
 
-
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = false)
+    @JoinColumn(name = "image_id")
+    private ImageEntity thumbnail;
 }

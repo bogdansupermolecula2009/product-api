@@ -30,4 +30,5 @@ public class UpdatedProductDto {
     @Min(value = 0, message = "price must be greater than 0")
     private Double price;
 
+    private Long thumbnailId;
 }

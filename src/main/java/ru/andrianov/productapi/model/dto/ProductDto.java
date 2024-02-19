@@ -20,4 +20,6 @@ public class ProductDto {
     private Double price;
 
     private LocalDateTime createdAt;
+
+    private Long thumbnailId;
 }

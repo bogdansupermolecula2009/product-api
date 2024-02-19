@@ -18,12 +18,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 @RestController
 @Transactional
 @RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService service;
+
 
     @GetMapping("/products")
     public ResponseEntity<List<ProductDto>> getProducts() {
@@ -54,7 +56,6 @@ public class ProductController {
         return ResponseEntity.ok().build();
 
     }
-
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
